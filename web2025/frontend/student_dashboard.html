@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Πίνακας Ελέγχου Φοιτητή</title>
+    <link rel="stylesheet" href="css/student_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+<header>
+    <h1>Πίνακας Ελέγχου Φοιτητή</h1>
+    <p>Καλώς ήρθες στο σύστημα διαχείρισης διπλωματικών εργασιών.</p>
+    <nav class="dashboard-navbar">
+    <button class="nav-btn active" onclick="showSection('section-topic', this)">
+        Θέμα
+    </button>
+
+    <button class="nav-btn" onclick="showSection('section-profile', this)">
+        Προφίλ
+    </button>
+
+    <button class="nav-btn" onclick="showSection('section-management', this)">
+        Διαχείριση
+    </button>
+</nav>
+
+</header>
+
+<main>
+
+<!-- ========================================================= -->
+<!-- 1) Προβολή Θέματος                                        -->
+<!-- ========================================================= -->
+<section id="section-topic" class="card dashboard-section">
+    <h2>1) Προβολή Θέματος</h2>
+
+    <!-- Progress Bar -->
+    <div id="progress_wrapper">
+        <div id="progress_bar"></div>
+        <span id="progress_label"></span>
+    </div>
+    <div id="status_message" style="margin-top:10px;font-weight:bold;"></div>
+    <!-- Θέμα Διπλωματικής -->
+    <h4>Θέμα Διπλωματικής Εργασίας:</h4>
+    <div id="manage_content"></div>
+    <div id="thesis_area">
+        <p>Φόρτωση στοιχείων...</p>
+    </div>
+    <div id="decision_box" style="margin-top: 15px;"></div>
+    <!-- Επιτροπή -->
+    <p id="committee_area" style="margin-top:10px;"></p>
+
+    <!-- Σχόλια επιτροπής -->
+    <h4>Σχόλια επιτροπής:</h4>
+    <div id="student_comments" style="margin-bottom:10px;"></div>
+
+    <!-- Links from student -->
+    <h4>Σύνδεσμοι επιπλέον υλικού:</h4>
+    <div id="links_box"></div>
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- 2) Επεξεργασία Προφίλ                                    -->
+<!-- ========================================================= -->
+<section id="section-profile" class="card dashboard-section" style="display:none;">
+    <h2>2) Επεξεργασία Προφίλ</h2>
+    <p>Δες και ενημέρωσε τα στοιχεία επικοινωνίας σου (διεύθυνση, email, τηλέφωνα).</p>
+
+    <button class="primary" onclick="window.location.href='student_profile.html'">
+        Επεξεργασία προφίλ
+    </button>
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- 3) Διαχείριση Διπλωματικής                               -->
+<!-- ========================================================= -->
+<section id="section-management" class="card dashboard-section" style="display:none;">
+    <h2>3) Διαχείριση διπλωματικής εργασίας</h2>
+
+    <p><strong>Τρέχουσα κατάσταση:</strong>
+        <span id="manage_status" class="status-badge"></span></p>
+
+   
+   
+    <div id="manage_content"></div>
+    <div id="actions_area"></div>
+
+    <p id="examStatusText"></p>
+    <div id="teachers_list"></div>
+    <hr>
+    <h3>Πρόχειρο Αρχείο</h3>
+
+    <input type="file" id="draftUpload" accept=".pdf,.doc,.docx,.txt"><br><br>
+    <button onclick="uploadDraft()">Ανέβασμα Πρόχειρου</button>
+    <p id="draftStatus"></p>
+
+    <div id="draftFileView"></div>
+    <div id="draftBox" style="margin-top:10px;font-size:14px;color:#444;"></div>
+
+    <hr>
+    <h3>📎 Σύνδεσμοι προς επιπλέον υλικό</h3>
+    <textarea id="resource_links" rows="3" style="width:100%;"></textarea>
+
+    <button id="save_links_btn" class="btn btn-secondary btn-sm" style="margin-top:5px;">
+        Αποθήκευση συνδέσμων
+    </button>
+    <small id="links_msg" style="display:block;margin-top:4px;"></small>
+
+
+
+    <!-- ========================================================= -->
+    <!-- FINAL PDF UPLOAD                                         -->
+    <!-- ========================================================= -->
+    <!-- ========================================================= -->
+<!-- FINAL PDF UPLOAD                                         -->
+<!-- ========================================================= -->
+
+
+<!-- ========================================================= -->
+<!-- EXAM SETTINGS                                             -->
+<!-- ========================================================= -->
+<hr>
+<h3>🕒 Ρυθμίσεις Εξέτασης</h3>
+
+<label>Ημερομηνία:</label>
+<input type="date" id="exam_date"><br><br>
+
+<label>Ώρα:</label>
+<input type="time" id="exam_time"><br><br>
+
+<label>Τρόπος Εξέτασης:</label>
+<select id="exam_type">
+    <option value="">-- Επιλογή --</option>
+    <option value="in_person">Δια ζώσης</option>
+    <option value="online">Online</option>
+</select><br><br>
+
+<div id="exam_room_box" style="display:none;">
+    <label>Αίθουσα:</label>
+    <input type="text" id="exam_room">
+</div>
+
+<div id="exam_link_box" style="display:none;">
+    <label>Σύνδεσμος Online:</label>
+    <input type="text" id="exam_link">
+</div>
+
+<br>
+<button id="saveExamDetailsBtn">Αποθήκευση λεπτομερειών εξέτασης</button>
+<p id="examMsg"></p>
+
+
+</section>
+
+</main>
+
+<footer>
+    
+
+    <button class="secondary" onclick="window.location.href='../backend/logout.php'">
+        Αποσύνδεση
+    </button>
+</footer>
+
+<script src="js/student_dashboard.js"></script>
+</body>
+</html>

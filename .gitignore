@@ -1,0 +1,5 @@
+*.sql
+*.json
+.env
+node_modules/
+vendor/

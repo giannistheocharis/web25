@@ -1,0 +1,250 @@
+    <!DOCTYPE html>
+    <html lang="el">
+    <head>
+        <meta charset="UTF-8">
+        <title>Πίνακας Ελέγχου Καθηγητή</title>
+        <link rel="stylesheet" href="css/teacher_dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+    <body>
+        <nav class="navigation-menu">
+            <ul>
+                <li><a href="#" onclick="showDashboard()"> Πτυχιακές που συμμετέχω και Λεπτομέρειες</a></li>
+                <li><a href="#section3" onclick="showTheses()">Δικά μου προτεινόμενα θέματα</a></li>
+                <li><a href="../backend/logout.php">Αποσύνδεση</a></li>
+            </ul>
+        </nav>
+        <main>
+
+    <h1>Πίνακας Ελέγχου</h1>
+    <p>Καλωσήρθες, <strong>Καθηγητά</strong></p>
+
+    <!-- KPI CARDS -->
+    <section class="dashboard-cards">
+        <h1>Πίνακας Ελέγχου Καθηγητή</h1>
+
+        <!-- 1) Πτυχιακές που συμμετέχω -->
+        <div class="card" id="dashboard">
+            <h2>1) Πτυχιακές που συμμετέχω</h2>
+                            <select id="filter-status">
+                <option value="">Όλες οι καταστάσεις</option>
+                <option value="pending">Σε αναμονή</option>
+                <option value="approved">Εγκεκριμένες</option>
+                <option value="active">Σε εξέλιξη</option>
+                <option value="under_exam">Σε εξέταση</option>
+                <option value="completed">Ολοκληρωμένες</option>
+                </select>
+
+
+                                <select id="filter-role">
+                <option value="">Όλοι οι ρόλοι</option>
+                <option value="Supervisor">Supervisor</option>
+                <option value="Member">Member</option>
+                </select>
+
+                  <table id="theses_table">
+                <thead>
+                <tr>
+                    <th>Φοιτητής</th>
+                    <th>Θέμα</th>
+                    <th>Ρόλος</th>
+                    <th>Κατάσταση</th>
+                    <th>Ενέργειες</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- γεμίζει από JS -->
+                </tbody>
+            </table>
+             <button onclick="exportTheses('csv')">📄 Export CSV</button>
+            <button onclick="exportTheses('json')">📦 Export JSON</button>
+ <!-- 2) Λεπτομέρειες / Αξιολόγηση -->
+        <div class="modal">
+            <h2> Λεπτομέρειες &amp; Αξιολόγηση</h2>
+        <div id="details_area">
+        <p>Επίλεξε μία πτυχιακή από πάνω.</p>
+        <div id="gradeSection" style="display:none; margin-top:10px;">
+        <h3>Βαθμολόγηση</h3>
+        <input type="number" id="gradeInput" min="0" max="10" step="0.5" placeholder="Εισαγωγή βαθμολογίας (0-10)">
+        <button type="button" onclick="submitGrade()">Καταχώρηση</button>
+        <p id="gradeStatus"></p>
+        <div id="exam_info_box" style="margin-top:20px; display:none;">
+        <h3>Στοιχεία Εξέτασης</h3>
+           <p><strong>Ημερομηνία:</strong> <span id="ex_date">-</span></p>
+        <p><strong>Ώρα:</strong> <span id="ex_time">-</span></p>
+        <p><strong>Τύπος εξέτασης:</strong> <span id="ex_type">-</span></p>
+
+        <p id="room_row"><strong>Αίθουσα:</strong> <span id="ex_room">-</span></p>
+
+        <p id="link_row" style="display:none;">
+            <strong>Σύνδεσμος:</strong>
+            <a id="ex_link" href="#" target="_blank">-</a>
+        </p>
+
+        <p><strong>Τελικό αρχείο:</strong> <span id="final_file_label">-</span></p>
+        <a id="final_file_link" href="#" target="_blank"></a>
+
+        <p><strong>Βαθμολογία:</strong> <span id="final_grade">-</span></p>
+    </div>
+    </div>
+       
+       
+       
+       
+       
+
+
+
+      </div>
+      
+      
+
+
+
+      </div>
+       
+            <div class="card">
+                <h2>Στατιστικά</h2>
+
+    <canvas id="statsChart" height="120"></canvas>
+        
+                <div class="card">
+            <h2>Προσκλήσεις Επιτροπής</h2>
+            <ul id="teacher_invites"></ul>
+        </div>
+      
+
+        </div>
+
+</div>
+
+    
+
+
+    </section>
+
+</main>
+    
+    <main>
+
+        
+
+
+    
+
+    
+
+     
+
+
+
+            
+
+
+      
+<main>
+        <!-- 3) Προτεινόμενα Θέματα Καθηγητή -->
+        <section class="card" id="theses" style="display:none;">
+            <h2>3) Δικά μου προτεινόμενα θέματα</h2>
+
+            <form id="topic_form" enctype="multipart/form-data">
+
+        <div class="form-row">
+            <label>Τίτλος:</label>
+            <input type="text" id="topic_title" name="title" required>
+        </div>
+
+        <div class="form-row">
+            <label>Περιγραφή:</label>
+            <textarea id="topic_desc" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
+            <label>Αρχείο PDF:</label>
+            <input type="file" id="topic_pdf" name="pdf" accept="application/pdf" >
+        </div>
+
+        
+
+        <button type="button" id="save_topic_btn" class="btn-primary">Αποθήκευση θέματος</button>
+        <span id="topic_msg"></span>
+    </form>
+
+            <h3>Τα θέματα μου</h3>
+            <ul id="topics_list"></ul>
+        
+        <!-- =============== Modal Ανάθεσης Θέματος σε Φοιτητή =============== -->
+    <div id="assignModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+
+            <h2>Ανάθεση Θέματος σε Φοιτητή</h2>
+
+            <!-- Hidden topic id -->
+            <input type="hidden" id="assign_topic_id">
+
+            <label>Αναζήτηση φοιτητή (ΑΜ ή όνομα):</label>
+                <div class="assign-search-wrapper">
+
+                <input type="text"
+                    id="assign_search"
+                    placeholder="π.χ. 10434 ή Maria"
+                    autocomplete="off"
+                >
+
+                <div id="assign_results" class="assign-dropdown"></div>
+
+</div>
+
+<div id="assign_selected_name"
+     style="margin:10px 0;font-weight:bold;color:#0055aa;"></div>
+
+
+            <div class="modal-buttons" style="margin-top:15px;display:flex;gap:10px;">
+            <button type="button" id="assign_final_btn" class="btn-primary">
+                Ολοκλήρωση Ανάθεσης
+                </button>
+                <button class="btn-secondary" onclick="closeAssignModal()">Κλείσιμο</button>
+            </div>
+
+        </div>
+    </div>
+
+    
+    <div id="editTopicModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <h2>Επεξεργασία Θέματος</h2>
+
+                    <form id="editTopicForm" enctype="multipart/form-data">
+                    <input type="hidden" name="topic_id" id="edit_topic_id">
+
+                    <label>Τίτλος:</label>
+                    <input type="text" name="edit_topic_title" id="edit_topic_title" required>
+
+                    <label>Περιγραφή:</label>
+                    <textarea name="edit_topic_desc" id="edit_topic_desc" required></textarea>
+
+                    <label>Υπάρχον PDF:</label>
+                    <p id="existing_pdf">(κανένα PDF)</p>
+
+                    <label>Ανέβασμα νέου PDF:</label>
+                    <input type="file" name="edit_pdf" id="edit_topic_pdf">
+
+                    <button type="button" onclick="submitEditTopic()">Αποθήκευση</button>
+                    <button type="button" onclick="closeEditModal()" class="btn btn-secondary">✖ Ακυρωση</button>
+                </form>
+
+                    </div>
+                </div>
+
+
+        </section>
+</main>
+
+        <footer>
+        <p>&copy; 2024 Πανεπιστήμιο. Όλα τα δικαιώματα διατηρούνται.</p>
+
+    <script src="js/teacher_dashboard.js"></script>
+    </body>
+    </html>

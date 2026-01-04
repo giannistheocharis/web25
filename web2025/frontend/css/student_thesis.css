@@ -1,0 +1,52 @@
+body {
+    background: linear-gradient(to bottom right, #0a2a6c, #1479ff);
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 30px;
+}
+
+.form-box {
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    width: 400px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    text-align: left;
+}
+
+.form-box label {
+    display: block;
+    margin-top: 15px;
+}
+
+.form-box input, .form-box textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 5px;
+}
+
+.form-box button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: #005eff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.form-box button:hover {
+    background: #003fcc;
+}
