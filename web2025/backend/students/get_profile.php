@@ -3,11 +3,10 @@ header('Content-Type: application/json');
 session_start();
 
 require_once "../db.php";
-require_once "../auth.php";   // κάνει ήδη έλεγχο login
+require_once "../auth.php";   
 
 $userId = $_SESSION['user_id'];
 
-// QUERY σωστό για MySQLi
 $stmt = $conn->prepare("
     SELECT 
         name AS first_name,
