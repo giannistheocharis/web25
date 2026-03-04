@@ -9,10 +9,7 @@ if(!$student_user_id){
     exit;
 }
 
-/*
- * Βρίσκουμε ΠΟΙΑ πτυχιακή ανήκει στον συνδεδεμένο φοιτητή.
- * Πιθανό schema: students.id = theses.student_id, students.user_id = users.id
- */
+
 $sql = "
     SELECT t.id
     FROM theses t
@@ -32,7 +29,6 @@ if(!$thesis){
 
 $thesis_id = $thesis['id'];
 
-/* Παίρνουμε τα μέλη επιτροπής από committee_members */
 $sql2 = "
     SELECT CONCAT(t.name,' ',t.surname) AS fullname,
            cm.role
