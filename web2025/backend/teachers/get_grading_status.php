@@ -4,9 +4,7 @@ require_once __DIR__ . "/../auth.php";
 
 header("Content-Type: application/json");
 
-/* ----------------------------------------------------
-   0) Έλεγχος login
----------------------------------------------------- */
+
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "teacher") {
     echo json_encode([]);
     exit;
@@ -14,9 +12,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "teacher") {
 
 $user_id = (int) $_SESSION["user_id"];
 
-/* ----------------------------------------------------
-   1) user_id -> teacher_id
----------------------------------------------------- */
+
 $stmt = $conn->prepare("
     SELECT id
     FROM teachers
@@ -33,9 +29,7 @@ if ($res->num_rows === 0) {
 
 $current_teacher_id = (int) $res->fetch_assoc()["id"];
 
-/* ----------------------------------------------------
-   2) Thesis id
----------------------------------------------------- */
+
 $thesis_id = (int) ($_GET["thesis_id"] ?? 0);
 if ($thesis_id <= 0) {
     echo json_encode([]);
@@ -44,9 +38,7 @@ if ($thesis_id <= 0) {
 
 $output = [];
 
-/* ----------------------------------------------------
-   3) Supervisor
----------------------------------------------------- */
+
 $stmt = $conn->prepare("
     SELECT t.id AS teacher_id, CONCAT(t.name,' ',t.surname) AS fullname
     FROM theses th
@@ -78,9 +70,7 @@ if ($sup) {
     ];
 }
 
-/* ----------------------------------------------------
-   4) Committee members (από committee_members)
----------------------------------------------------- */
+
 $stmt = $conn->prepare("
     SELECT cm.teacher_id, CONCAT(t.name,' ',t.surname) AS fullname
     FROM committee_members cm
