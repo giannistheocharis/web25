@@ -11,7 +11,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 
 $user_id = $_SESSION['user_id'];
 
-// βρες student_id
 $q1 = $conn->prepare("SELECT id FROM students WHERE user_id = ? LIMIT 1");
 $q1->bind_param("i", $user_id);
 $q1->execute();
@@ -24,7 +23,6 @@ if ($res1->num_rows === 0) {
 
 $student_id = $res1->fetch_assoc()['id'];
 
-// βρες APPROVED thesis
 $q2 = $conn->prepare("
     SELECT id, supervisor_id
     FROM theses
@@ -43,7 +41,6 @@ if ($res2->num_rows === 0) {
 $thesis = $res2->fetch_assoc();
 $supervisor_id = (int)$thesis['supervisor_id'];
 
-// φέρε καθηγητές εκτός supervisor
 $sql = "
     SELECT id, name, surname
     FROM teachers
