@@ -11,7 +11,6 @@ if(!isset($_SESSION['user_id'])){
 
 $user_id = $_SESSION['user_id'];
 
-// 1) βρίσκουμε student_id
 $q = $conn->prepare("SELECT id FROM students WHERE user_id=? LIMIT 1");
 $q->bind_param("i", $user_id);
 $q->execute();
@@ -24,7 +23,6 @@ if(!$student){
 
 $student_id = $student['id'];
 
-// 2) βρίσκουμε thesis
 $q = $conn->prepare("SELECT id FROM theses WHERE student_id=? LIMIT 1");
 $q->bind_param("i", $student_id);
 $q->execute();
@@ -37,7 +35,6 @@ if(!$thesis){
 
 $thesis_id = $thesis["id"];
 
-// 3) file upload
 if(!isset($_FILES['draft'])){
     echo json_encode(["error"=>"no_file"]);
     exit;
@@ -59,7 +56,6 @@ $path = $dir.$filename;
 
 move_uploaded_file($file["tmp_name"],$path);
 
-// 4) αποθήκευση σε νέο πίνακα
 $save = $conn->prepare("
     INSERT INTO thesis_drafts (thesis_id, student_id, file_name)
     VALUES (?,?,?)
