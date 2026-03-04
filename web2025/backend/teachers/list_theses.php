@@ -5,7 +5,6 @@ header("Content-Type: application/json");
 
 $user_id = $_SESSION['user_id'];
 
-// Βρίσκουμε ποιος teacher είναι συνδεδεμένος
 $q = $conn->query("SELECT id FROM teachers WHERE user_id=$user_id LIMIT 1");
 if($q->num_rows==0){ echo json_encode([]); exit; }
 $teacher_id = $q->fetch_assoc()['id'];
