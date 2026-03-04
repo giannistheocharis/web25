@@ -8,11 +8,7 @@ if (!$thesis_id) {
     exit;
 }
 
-/** 
- * ΥΠΟΘΕΣΗ:
- * στο db.php υπάρχει:
- * $conn = new mysqli(...)
- */
+
 if (!isset($conn)) {
     echo json_encode(['error' => 'DB connection missing']);
     exit;
