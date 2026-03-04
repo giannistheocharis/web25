@@ -4,18 +4,14 @@ require_once __DIR__ . '/../db.php';
 
 header('Content-Type: application/json');
 
-// =====================
-// INPUT
-// =====================
+
 $topic_id = (int)$_POST['topic_id'];
 $title    = trim($_POST['edit_topic_title']);
 $desc     = trim($_POST['edit_topic_desc']);
 
 $user_id = $_SESSION['user_id'];
 
-// =====================
-// FIND TEACHER
-// =====================
+
 $q = $conn->prepare("SELECT id FROM teachers WHERE user_id=? LIMIT 1");
 $q->bind_param("i", $user_id);
 $q->execute();
@@ -29,9 +25,7 @@ if (!$teacher) {
 
 $teacher_id = (int)$teacher['id'];
 
-// =====================
-// LOAD OLD PDF PATH
-// =====================
+
 $stmt = $conn->prepare(
     "SELECT pdf_path FROM topics WHERE id=? AND teacher_id=? LIMIT 1"
 );
@@ -48,9 +42,7 @@ if (!$row) {
 $old_pdf_path = $row['pdf_path'];
 $pdf_path = $old_pdf_path; // default
 
-// =====================
-// HANDLE NEW PDF UPLOAD
-// =====================
+
 if (!empty($_FILES['edit_pdf']['name'])) {
 
     $filename = time() . "_" . basename($_FILES['edit_pdf']['name']);
@@ -68,9 +60,7 @@ if (!empty($_FILES['edit_pdf']['name'])) {
     }
 }
 
-// =====================
-// UPDATE TOPIC (ALWAYS WITH pdf_path)
-// =====================
+
 $sql = "UPDATE topics
         SET title=?, description=?, pdf_path=?
         WHERE id=? AND teacher_id=?";
@@ -87,9 +77,7 @@ $stmt->bind_param(
 
 $stmt->execute();
 
-// =====================
-// RESPONSE
-// =====================
+
 echo json_encode([
     "success" => true,
     "message" => "Το θέμα ενημερώθηκε επιτυχώς"
