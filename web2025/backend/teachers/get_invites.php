@@ -2,14 +2,14 @@
 require_once "../db.php";
 session_start();
 
-// 1. Παίρνουμε το user_id από το session
+
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([]);
     exit;
 }
 $user_id = intval($_SESSION['user_id']);
 
-// 2. Βρίσκουμε ποιος teacher είναι αυτός ο user
+
 $q = $conn->query("SELECT id FROM teachers WHERE user_id = $user_id LIMIT 1");
 if (!$q || $q->num_rows == 0) {
     echo json_encode([]);
@@ -18,7 +18,6 @@ if (!$q || $q->num_rows == 0) {
 $row = $q->fetch_assoc();
 $teacher_id = intval($row['id']);
 
-// 3. Φέρνουμε τις προσκλήσεις από committee_invitations
 $stmt = $conn->prepare("
     SELECT 
         ci.id ,
