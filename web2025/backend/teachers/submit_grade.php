@@ -11,7 +11,7 @@ $thesis_id = intval($data['thesis_id']);
 $grade = floatval($data['grade']);
 $teacher_id = $_SESSION['user_id'];
 
-// Πάρε τον ρόλο του καθηγητή στην επιτροπή
+
 $roleQuery = $conn->query("SELECT role FROM committee_members 
                            WHERE thesis_id=$thesis_id AND teacher_id=$teacher_id LIMIT 1");
 $role = $roleQuery->fetch_assoc()['role'];
@@ -19,7 +19,7 @@ $role = $roleQuery->fetch_assoc()['role'];
 $conn->query("INSERT INTO exam_grades (thesis_id,teacher_id,grade,role,graded_at)
               VALUES($thesis_id,$teacher_id,$grade,'$role',NOW())");
 
-// Έλεγχος αν υπάρχουν 3 βαθμοί
+
 $q=$conn->query("SELECT AVG(grade) AS final, COUNT(*) AS c 
                  FROM exam_grades WHERE thesis_id=$thesis_id");
 $r=$q->fetch_assoc();
