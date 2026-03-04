@@ -9,7 +9,6 @@ if (!$id) {
     exit;
 }
 
-/* ===== BASIC DETAILS ===== */
 $sql = "
 SELECT
     t.id,
@@ -46,7 +45,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();
 
-/* ⬇️ ΠΡΩΤΑ παίρνουμε το αποτέλεσμα */
+
 $data = $stmt->get_result()->fetch_assoc();
 
 if (!$data) {
@@ -54,7 +53,7 @@ if (!$data) {
     exit;
 }
 
-/* ===== COMMITTEE MEMBERS ===== */
+
 $committee = [];
 
 $stmt2 = $conn->prepare("
