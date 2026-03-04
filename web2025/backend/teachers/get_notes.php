@@ -8,7 +8,7 @@ header("Content-Type: application/json; charset=UTF-8");
 $thesis_id = intval($_GET['thesis_id'] ?? 0);
 $teacher_id = $_SESSION['user_id'];
 
-// Μόνο ο δημιουργός βλέπει τις σημειώσεις του
+/
 $sql = "
     SELECT id, note, created_at
     FROM thesis_notes
