@@ -2,13 +2,13 @@
 session_start();
 require "../db.php";
 
-// === AUTH CHECK ===
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     echo json_encode(["error" => "unauthorized"]);
     exit;
 }
 
-// === INPUT ===
+
 
 $invite_id = intval($_POST['invite_id'] ?? 0);
 $action    = $_POST['action'] ?? '';
@@ -48,7 +48,7 @@ if ($conn->affected_rows === 0) {
     exit;
 }
 
-// === 2) IF ACCEPTED → ADD TO COMMITTEE ===
+
 if ($status === 'accepted') {
 
     $q = $conn->query("
@@ -69,7 +69,7 @@ if ($status === 'accepted') {
     }
 }
 
-// === 3) CHECK IF 2 ACCEPTED → ACTIVATE THESIS ===
+
 $q = $conn->query("
     SELECT thesis_id, SUM(status='accepted') AS accepted_count
     FROM committee_invitations
