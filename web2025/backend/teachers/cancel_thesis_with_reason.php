@@ -29,7 +29,7 @@ $conn->begin_transaction();
 
 try {
 
-    // 1️⃣ Αποθήκευση λόγου ακύρωσης
+    
     $stmt = $conn->prepare("
         INSERT INTO thesis_cancellations (thesis_id, teacher_id, reason)
         VALUES (?, ?, ?)
@@ -37,7 +37,7 @@ try {
     $stmt->bind_param("iis", $thesis_id, $teacher_id, $reason);
     $stmt->execute();
 
-    // 2️⃣ Αλλαγή κατάστασης πτυχιακής
+    
     $stmt = $conn->prepare("
         UPDATE theses
         SET thesis_status = 'canceled'
