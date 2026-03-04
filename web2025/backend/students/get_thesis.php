@@ -5,7 +5,6 @@ require_once "../db.php";
 
 $student_id = $_SESSION['user_id'];
 
-// Βρίσκουμε ποιος student είναι
 $q = $conn->query("SELECT id FROM students WHERE user_id=$student_id LIMIT 1");
 if($q->num_rows==0){ echo json_encode(null); exit; }
 $student_id = $q->fetch_assoc()['id'];
