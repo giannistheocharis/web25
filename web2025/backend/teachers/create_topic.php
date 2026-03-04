@@ -3,7 +3,7 @@ session_start();
 require_once("../db.php");
 header("Content-Type: application/json");
 
-$teacher_id = $_SESSION['user_id'];  // ⚠ είσαι logged in professor
+$teacher_id = $_SESSION['user_id'];  
 $title = $_POST['title'] ?? "";
 $desc  = $_POST['description'] ?? "";
 
