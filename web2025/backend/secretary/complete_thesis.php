@@ -7,7 +7,7 @@ if (!$thesis_id) {
     exit;
 }
 
-// ΞΑΝΑ-ΕΛΕΓΧΟΣ (μην το παραλείψεις)
+
 $sql = "
 SELECT
     t.repository_url,
@@ -31,7 +31,7 @@ if (!$can_complete) {
     exit;
 }
 
-// ΟΛΟΚΛΗΡΩΣΗ
+
 $update = $pdo->prepare(
     "UPDATE thesis SET status = 'completed', end_date = CURDATE() WHERE id = ?"
 );
