@@ -11,7 +11,7 @@ if(!$title || !$abstract){
     exit;
 }
 
-// ---------- FILE UPLOAD ----------
+
 $pdfPath = null;
 if(isset($_FILES['pdf']) && $_FILES['pdf']['error']==0){
 
@@ -27,14 +27,13 @@ if(isset($_FILES['pdf']) && $_FILES['pdf']['error']==0){
 }
 
 
-// === CHECK IF STUDENT ALREADY HAS A THESIS ===
 $check = $conn->prepare("SELECT id FROM theses WHERE student_id=? LIMIT 1");
 $check->bind_param("i", $studentId);
 $check->execute();
 $exists = $check->get_result()->fetch_assoc();
 
 if($exists){
-    // UPDATE --------------------------
+    
     $stmt = $conn->prepare("
         UPDATE theses 
         SET thesis_title=?, thesis_abstract=?, pdf_path=?, created_at=NOW()
@@ -45,7 +44,7 @@ if($exists){
 
     echo json_encode(["success"=>true,"message"=>"Η πτυχιακή ενημερώθηκε επιτυχώς!"]);
 }else{
-    // INSERT FIRST TIME ----------------
+    
     $stmt = $conn->prepare("
         INSERT INTO theses(student_id, thesis_title, thesis_abstract, pdf_path, thesis_status, created_at)
         VALUES(?,?,?,?,'Υπό Ανάθεση',NOW())
