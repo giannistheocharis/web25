@@ -1,12 +1,9 @@
 <?php
-/* ==================================================
-   FULL DEBUG SAVE LINKS
-   ================================================== */
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-/* ---------- DEBUG HELPER ---------- */
 function dbg($label, $data = null) {
     file_put_contents(
         __DIR__ . '/debug.log',
@@ -23,9 +20,7 @@ require_once "../db.php";
 
 dbg('SCRIPT START');
 
-/* ==================================================
-   1) SESSION / AUTH
-   ================================================== */
+
 dbg('SESSION', $_SESSION);
 
 if (
@@ -41,9 +36,7 @@ if (
 $user_id = (int)$_SESSION['user_id'];
 dbg('USER ID', $user_id);
 
-/* ==================================================
-   2) READ JSON INPUT
-   ================================================== */
+
 $raw = file_get_contents("php://input");
 dbg('RAW INPUT', $raw);
 
@@ -59,9 +52,7 @@ if ($thesis_id <= 0) {
     exit;
 }
 
-/* ==================================================
-   3) READ LINKS (STRING OR ARRAY)
-   ================================================== */
+
 $new_links = $data['links'] ?? [];
 dbg('RAW LINKS', $new_links);
 
@@ -77,9 +68,7 @@ $new_links = array_values(
 
 dbg('CLEAN LINKS', $new_links);
 
-/* ==================================================
-   4) FIND STUDENT
-   ================================================== */
+
 $q = $conn->prepare("
     SELECT id 
     FROM students 
@@ -100,9 +89,7 @@ if (!$student) {
 
 $student_id = (int)$student['id'];
 
-/* ==================================================
-   5) FIND THESIS
-   ================================================== */
+
 $q2 = $conn->prepare("
     SELECT resource_links
     FROM theses
@@ -121,9 +108,7 @@ if (!$thesis) {
     exit;
 }
 
-/* ==================================================
-   6) MERGE LINKS
-   ================================================== */
+
 $existing = json_decode($thesis['resource_links'] ?? '[]', true);
 if (!is_array($existing)) {
     $existing = [];
@@ -134,9 +119,7 @@ dbg('EXISTING LINKS', $existing);
 $all_links = array_merge($existing, $new_links);
 dbg('FINAL LINKS', $all_links);
 
-/* ==================================================
-   7) SAVE TO DB
-   ================================================== */
+
 $jsonLinks = json_encode($all_links, JSON_UNESCAPED_UNICODE);
 
 $u = $conn->prepare("
