@@ -18,7 +18,6 @@ if (!$teacher_id) {
 
 $user_id = $_SESSION['user_id'];
 
-/* 1️⃣ Βρίσκουμε student_id */
 $q1 = $conn->prepare("SELECT id FROM students WHERE user_id=? LIMIT 1");
 $q1->bind_param("i", $user_id);
 $q1->execute();
@@ -29,7 +28,6 @@ if ($res1->num_rows === 0) {
 }
 $student_id = $res1->fetch_assoc()['id'];
 
-/* 2️⃣ Βρίσκουμε ΤΗΝ thesis ΤΟΥ φοιτητή */
 $q2 = $conn->prepare("
     SELECT id 
     FROM theses 
@@ -46,7 +44,6 @@ if ($res2->num_rows === 0) {
 }
 $thesis_id = $res2->fetch_assoc()['id'];
 
-/* 3️⃣ Αποφυγή διπλής πρόσκλησης */
 $check = $conn->prepare("
     SELECT id 
     FROM committee_invitations 
@@ -60,7 +57,6 @@ if ($check->get_result()->num_rows > 0) {
     exit;
 }
 
-/* 4️⃣ Εισαγωγή πρόσκλησης */
 $ins = $conn->prepare("
     INSERT INTO committee_invitations 
     (thesis_id, teacher_id, status, sent_at)
