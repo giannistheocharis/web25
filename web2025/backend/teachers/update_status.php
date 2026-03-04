@@ -5,9 +5,7 @@ require_once __DIR__ . '/../db.php';
 
 header('Content-Type: application/json');
 
-// =======================
-// Read input
-// =======================
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 $thesis_id  = (int)($data['thesis_id'] ?? 0);
@@ -21,9 +19,7 @@ if (!$thesis_id || !$new_status) {
     exit;
 }
 
-// =======================
-// Get logged teacher_id from session user_id
-// =======================
+
 $user_id = $_SESSION['user_id'] ?? null;
 
 $stmt = $conn->prepare("SELECT id FROM teachers WHERE user_id = ?");
@@ -41,9 +37,7 @@ if (!$teacher) {
 
 $teacher_id = (int)$teacher['id'];
 
-// =======================
-// Get current thesis status + supervisor_id
-// =======================
+
 $stmt = $conn->prepare("
     SELECT thesis_status, supervisor_id
     FROM theses
@@ -64,9 +58,7 @@ if (!$row) {
 $current_status = $row['thesis_status'];
 $supervisor_id  = (int)$row['supervisor_id'];
 
-// =======================
-// Allowed transitions (STATE MACHINE)
-// =======================
+
 $allowedTransitions = [
     'pending'     => ['approved', 'rejected'],
     'approved'    => ['active'],
@@ -74,9 +66,7 @@ $allowedTransitions = [
     'under_exam'  => ['completed']
 ];
 
-// =======================
-// Validate transition
-// =======================
+
 if (
     !isset($allowedTransitions[$current_status]) ||
     !in_array($new_status, $allowedTransitions[$current_status], true)
@@ -88,9 +78,7 @@ if (
     exit;
 }
 
-// =======================
-// Supervisor check (ΜΟΝΟ για active → under_exam)
-// =======================
+
 if ($current_status === 'active' && $new_status === 'under_exam') {
 
     if ($teacher_id !== $supervisor_id) {
@@ -102,9 +90,7 @@ if ($current_status === 'active' && $new_status === 'under_exam') {
     }
 }
 
-// =======================
-// Update thesis status
-// =======================
+
 $stmt = $conn->prepare("
     UPDATE theses
     SET thesis_status = ?
