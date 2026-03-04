@@ -1,6 +1,6 @@
 <?php
 require_once "../db.php";
-require_once "../auth.php"; // θα βάλεις check ρόλου αν θέλεις
+require_once "../auth.php"; 
 
 $thesis_id = $_POST['thesis_id'];
 $t1 = $_POST['t1'];
