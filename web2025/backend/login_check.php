@@ -23,7 +23,7 @@ try {
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
 
-    if ($user && $password === $user['password']) {  // Απλός έλεγχος τώρα
+    if ($user && $password === $user['password']) {  
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role']   = $user['role'];
