@@ -24,10 +24,10 @@ foreach ($data['teachers'] as $teacher) {
     $surname = trim($teacher['surname']);
     $university = trim($teacher['university']);
 
-    // username: name.surname
+    
     $username = strtolower($name . '.' . $surname);
 
-    // 1️⃣ INSERT user
+   
     $stmtUser = $conn->prepare("
         INSERT INTO users (username, password, role)
         VALUES (?, 'test', 'teacher')
@@ -40,7 +40,7 @@ foreach ($data['teachers'] as $teacher) {
 
     $user_id = $conn->insert_id;
 
-    // 2️⃣ INSERT teacher
+   
     $stmtTeacher = $conn->prepare("
         INSERT INTO teachers (user_id, name, surname, university)
         VALUES (?, ?, ?, ?)
