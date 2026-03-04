@@ -7,9 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/* =====================================================
-   0) Έλεγχος login & ρόλου
-===================================================== */
+
 if (
     !isset($_SESSION["user_id"]) ||
     $_SESSION["role"] !== "teacher"
@@ -20,9 +18,7 @@ if (
 
 $user_id = (int) $_SESSION["user_id"];
 
-/* =====================================================
-   1) Μετατροπή user_id -> teacher_id
-===================================================== */
+
 $stmt = $conn->prepare("
     SELECT id
     FROM teachers
@@ -39,9 +35,7 @@ if ($res->num_rows === 0) {
 
 $teacher_id = (int) $res->fetch_assoc()["id"];
 
-/* =====================================================
-   2) Ανάγνωση input
-===================================================== */
+
 $data = json_decode(file_get_contents("php://input"), true);
 
 $thesis_id = (int) ($data["thesis_id"] ?? 0);
@@ -52,17 +46,13 @@ if ($thesis_id <= 0) {
     exit;
 }
 
-/* =====================================================
-   3) Validate βαθμού
-===================================================== */
+
 if ($grade < 0 || $grade > 10) {
     echo json_encode(["success" => false, "message" => "invalid_grade"]);
     exit;
 }
 
-/* =====================================================
-   4) Φέρε supervisor της διπλωματικής
-===================================================== */
+
 $stmt = $conn->prepare("
     SELECT supervisor_id
     FROM theses
@@ -79,9 +69,7 @@ if ($res->num_rows === 0) {
 
 $supervisor_id = (int) $res->fetch_assoc()["supervisor_id"];
 
-/* =====================================================
-   5) Έλεγχος δικαιώματος βαθμολόγησης
-===================================================== */
+
 $is_allowed = false;
 
 // Supervisor
@@ -108,9 +96,7 @@ if (!$is_allowed) {
     exit;
 }
 
-/* =====================================================
-   6) Αποθήκευση / ενημέρωση βαθμού
-===================================================== */
+
 $stmt = $conn->prepare("
     INSERT INTO exam_grades (thesis_id, teacher_id, grade, graded_at)
     VALUES (?, ?, ?, NOW())
@@ -121,9 +107,7 @@ $stmt = $conn->prepare("
 $stmt->bind_param("iid", $thesis_id, $teacher_id, $grade);
 $stmt->execute();
 
-/* =====================================================
-   7) Πόσοι ΠΡΕΠΕΙ να βαθμολογήσουν
-===================================================== */
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS committee_count
     FROM committee_members
@@ -135,9 +119,7 @@ $stmt->execute();
 $committee_count = (int) $stmt->get_result()->fetch_assoc()["committee_count"];
 $total_needed = 1 + $committee_count; // supervisor + committee
 
-/* =====================================================
-   8) Πόσοι ΕΧΟΥΝ βαθμολογήσει
-===================================================== */
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS graded_count
     FROM exam_grades
@@ -148,9 +130,7 @@ $stmt->execute();
 
 $graded_count = (int) $stmt->get_result()->fetch_assoc()["graded_count"];
 
-/* =====================================================
-   9) Αν έχουν μπει όλοι → υπολογισμός AVG
-===================================================== */
+
 if ($graded_count >= $total_needed) {
 
     $stmt = $conn->prepare("
@@ -179,9 +159,7 @@ if ($graded_count >= $total_needed) {
     exit;
 }
 
-/* =====================================================
-   10) Επιτυχία αλλά όχι ολοκλήρωση
-===================================================== */
+
 echo json_encode([
     "success"   => true,
     "completed" => false
