@@ -19,26 +19,20 @@ if (!$invite) {
 
 $assignment_id = $invite["assignment_id"];
 
-// --------------------------------------
-// Μόνο update status
-// --------------------------------------
+
 $newStatus = ($action === "accept") ? "accepted" : "rejected";
 $stmt = $conn->prepare("UPDATE committee_invitations SET status=? WHERE id=?");
 $stmt->bind_param("si", $newStatus, $id);
 $stmt->execute();
 
-// --------------------------------------
-// Αν απορρίφθηκε -> απλά τέλος
-// --------------------------------------
+
 if ($newStatus === "rejected") {
     echo json_encode(["message"=>"Απορρίφθηκε"]);
     exit;
 }
 
-// --------------------------------------
-// Μετράμε accepted
-// --------------------------------------
-// count accepted
+
+
 $count = $conn->query("
     SELECT COUNT(*) AS c FROM committee_invitations
     WHERE thesis_id=$thesis_id AND status='accepted'
