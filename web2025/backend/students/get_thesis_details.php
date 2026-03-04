@@ -1,5 +1,4 @@
 <?php
-// backend/students/get_thesis_details.php
 require_once "../auth.php";
 require_once "../db.php";
 
@@ -10,7 +9,6 @@ if (!$userId) {
     exit;
 }
 
-// Βρίσκουμε το student_id από τον πίνακα students
 $stmt = $conn->prepare("SELECT id FROM students WHERE user_id = ?");
 $stmt->execute([$userId]);
 $student = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -22,7 +20,6 @@ if (!$student) {
 
 $studentId = $student['id'];
 
-// Παίρνουμε τη διπλωματική + assignment + επιτροπή + exam_info
 $sql = "
     SELECT 
         t.*,
@@ -53,7 +50,6 @@ if (!$thesis) {
     exit;
 }
 
-// Υπολογισμός ημερών από ανάθεση (αν υπάρχει)
 $thesis['days_since_assignment'] = null;
 if (!empty($thesis['assigned_at'])) {
     try {
