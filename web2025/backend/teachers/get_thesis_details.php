@@ -7,9 +7,7 @@ header('Content-Type: application/json');
 $thesis_id = (int)($_GET['id'] ?? 0);
 if(!$thesis_id){ echo json_encode(null); exit; }
 
-// ============================
-//  Φέρνουμε βασικά στοιχεία εργασίας
-// ============================
+
 $sql = "
 SELECT 
     t.id,
@@ -43,12 +41,7 @@ $thesis = $stmt->get_result()->fetch_assoc();
 
 if(!$thesis){ echo json_encode(null); exit; }
 
-// ============================
-// Μέλη επιτροπής (από invitations)
-// ============================
-// ============================
-// Μέλη επιτροπής (από committee_invitations)
-// ============================
+
 
 $q2 = $conn->prepare("
     SELECT 
