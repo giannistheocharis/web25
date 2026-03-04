@@ -3,7 +3,6 @@ header("Content-Type: application/json");
 session_start();
 require_once "../db.php";   // ή ../config.php, ό,τι χρησιμοποιείς κανονικά
 
-// 1) Έλεγχος login
 $user_id = $_SESSION['user_id'] ?? 0;
 
 if (!$user_id) {
@@ -11,7 +10,6 @@ if (!$user_id) {
     exit;
 }
 
-// 2) Διαβάζουμε JSON από fetch()
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data) {
@@ -19,7 +17,6 @@ if (!$data) {
     exit;
 }
 
-// 3) Βρίσκουμε ποιος student αντιστοιχεί σε αυτό το user_id
 $stmt = $conn->prepare("SELECT id FROM students WHERE user_id = ? LIMIT 1");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -33,7 +30,6 @@ if ($res->num_rows === 0) {
 $student_row = $res->fetch_assoc();
 $student_id  = (int)$student_row['id'];
 
-// 4) Βρίσκουμε την πτυχιακή αυτού του student
 $stmt2 = $conn->prepare("SELECT id FROM theses WHERE student_id = ? LIMIT 1");
 $stmt2->bind_param("i", $student_id);
 $stmt2->execute();
@@ -46,7 +42,6 @@ if ($res2->num_rows === 0) {
 
 $thesis_id = (int)$res2->fetch_assoc()['id'];
 
-// 5) Κάνουμε UPDATE με τα στοιχεία της εξέτασης + αλλάζουμε κατάσταση σε under_exam
 $sql = $conn->prepare("
     UPDATE theses
     SET 
@@ -80,7 +75,6 @@ if (!$ok) {
     exit;
 }
 
-// 6) Επιτυχία
 echo json_encode([
     "success" => true,
     "step"    => "done",
