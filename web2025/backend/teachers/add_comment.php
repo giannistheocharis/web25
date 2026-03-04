@@ -6,7 +6,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $thesis_id = $data['thesis_id'];
 $comment   = $data['comment'];
 
-// Βρίσκουμε το teacher_id μέσω του user_id του login
+
 $user_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("SELECT id FROM teachers WHERE user_id=? LIMIT 1");
@@ -19,7 +19,7 @@ if(!$res){
     exit;
 }
 
-$teacher_id = $res['id'];  // << ΑΥΤΟ ΧΡΕΙΑΖΕΤΑΙ
+$teacher_id = $res['id'];  
 $comment = trim($data["comment"]);
 
 if(strlen($comment) > 300){
