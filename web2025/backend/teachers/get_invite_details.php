@@ -2,7 +2,6 @@
 require_once "../db.php";
 session_start();
 
-/* ================= ΑΣΦΑΛΕΙΑ ================= */
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     http_response_code(403);
     echo json_encode(["error" => "unauthorized"]);
@@ -17,9 +16,7 @@ if (!isset($_GET['id'])) {
 
 $invite_id = intval($_GET['id']);
 
-/* =========================================================
-   1) ΒΑΣΙΚΑ ΣΤΟΙΧΕΙΑ ΠΡΟΣΚΛΗΣΗΣ + ΔΙΠΛΩΜΑΤΙΚΗΣ + ΦΟΙΤΗΤΗ
-   ========================================================= */
+
 $stmt = $conn->prepare("
     SELECT
         ci.id,
@@ -55,9 +52,7 @@ if ($res->num_rows === 0) {
 $invite = $res->fetch_assoc();
 $thesis_id = intval($invite['thesis_id']);
 
-/* =========================================================
-   2) ΤΡΙΜΕΛΗΣ ΕΠΙΤΡΟΠΗ (ΜΕΛΗ ΠΟΥ ΕΧΟΥΝ ΠΡΟΣΚΛΗΘΕΙ)
-   ========================================================= */
+
 $stmt = $conn->prepare("
     SELECT
         CONCAT(u.username, ' ') AS name,
@@ -80,9 +75,7 @@ while ($row = $res->fetch_assoc()) {
     $committee[] = $row;
 }
 
-/* =========================================================
-   3) SUPERVISOR (ΔΕΝ ΕΧΕΙ ΠΡΟΣΚΛΗΣΗ → ΤΟΝ ΠΡΟΣΘΕΤΟΥΜΕ ΧΕΙΡΟΚΙΝΗΤΑ)
-   ========================================================= */
+
 $stmt = $conn->prepare("
     SELECT CONCAT(name, ' ', surname) AS name
     FROM teachers
@@ -105,9 +98,7 @@ if ($sup = $res->fetch_assoc()) {
 }
 
 
-/* =========================================================
-   4) ΤΕΛΙΚΟ JSON
-   ========================================================= */
+
 echo json_encode([
     "id"             => $invite['id'],
     "status"         => $invite['status'],
