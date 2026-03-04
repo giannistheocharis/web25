@@ -1,8 +1,8 @@
 <?php
 session_start();
-session_unset();         // καθαρίζει όλα τα session values
-session_destroy();       // κλείνει το session
+session_unset();         
+session_destroy();       
 
-header("Location: ../frontend/login.html"); // επιστροφή στην σελίδα login
+header("Location: ../frontend/login.html"); 
 exit();
 ?>
