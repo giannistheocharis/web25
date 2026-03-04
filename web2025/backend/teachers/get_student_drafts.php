@@ -6,7 +6,6 @@ header("Content-Type: application/json");
 $user_id = $_SESSION['user_id'] ?? null;
 if(!$user_id){ echo json_encode(["error"=>"no_user"]); exit; }
 
-// Βρίσκουμε teacher_id από users
 $q = $conn->prepare("SELECT id FROM teachers WHERE user_id=? LIMIT 1");
 $q->bind_param("i",$user_id);
 $q->execute();
@@ -16,7 +15,6 @@ if(!$t){ echo json_encode(["error"=>"no_teacher"]); exit; }
 
 $teacher_id = $t['id'];
 
-// ΦΕΡΝΟΥΜΕ ΟΛΑ ΤΑ DRAFTS ΤΩΝ ΦΟΙΤΗΤΩΝ ΠΟΥ ΕΧΕΙ ΣΤΗΝ ΕΠΙΤΡΟΠΗ
 $sql = $conn->prepare("
     SELECT d.file_name, d.uploaded_at, s.name AS student_name, s.id AS student_id
     FROM thesis_drafts d
