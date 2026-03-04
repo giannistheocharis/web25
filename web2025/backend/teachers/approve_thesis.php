@@ -8,7 +8,7 @@ $status    = $data['status'] ?? null;
 
 $user_id = $_SESSION['user_id'];
 
-// Έλεγχος αν ο χρήστης είναι supervisor
+
 $check = $conn->prepare("
     SELECT role FROM committee_members 
     WHERE thesis_id = ? AND teacher_id = ? LIMIT 1
@@ -22,7 +22,7 @@ if(!$res || $res['role'] !== "supervisor"){
     exit;
 }
 
-// ---- ΕΠΙΤΡΕΠΟΜΕΝΕΣ ΜΕΤΑΒΑΣΕΙΣ ----
+
 $allowed = ["approved","rejected","active","under_exam"];
 
 if(!in_array($status,$allowed)){
