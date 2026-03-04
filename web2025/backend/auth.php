@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once __DIR__ . "/db.php";   // FIX για path
+require_once __DIR__ . "/db.php";   
 
 header("Content-Type: application/json");
 
@@ -26,6 +26,6 @@ if(!$user){
     exit;
 }
 
-// (έχουμε user πλέον ✔)
+
 $_SESSION['role'] = $user['role']; // refresh role
 ?>
