@@ -15,7 +15,7 @@ if (!$thesis_id) {
     exit;
 }
 
-// Βρες teacher_id από user
+
 $user_id = $_SESSION['user_id'] ?? 0;
 $stmt = $conn->prepare("SELECT id FROM teachers WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
@@ -28,7 +28,7 @@ if (!$teacher) {
 }
 $teacher_id = (int)$teacher['id'];
 
-// Έλεγχος ότι είναι supervisor
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS cnt
     FROM committee_members
@@ -42,14 +42,14 @@ if (!$row || $row['cnt'] == 0) {
     exit;
 }
 
-// Πόσα μέλη έχει η επιτροπή;
+
 $stmt = $conn->prepare("SELECT COUNT(*) AS total_members FROM committee_members WHERE thesis_id = ?");
 $stmt->bind_param("i", $thesis_id);
 $stmt->execute();
 $cm = $stmt->get_result()->fetch_assoc();
 $total_members = (int)$cm['total_members'];
 
-// Πόσοι έχουν βάλει βαθμό;
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS graded_members, AVG(grade) AS avg_grade
     FROM exam_grades
@@ -71,7 +71,7 @@ if ($graded_members < $total_members) {
 
 $final = round($avg_grade, 2);
 
-// Αποθήκευση τελικού βαθμού + completed
+
 $stmt = $conn->prepare("
     UPDATE theses
     SET final_grade = ?, thesis_status = 'completed'
