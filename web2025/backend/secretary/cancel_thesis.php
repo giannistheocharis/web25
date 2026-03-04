@@ -16,7 +16,6 @@ if (!$thesis_id || !$reason) {
     exit;
 }
 
-/* Έλεγχος κατάστασης */
 $check = $conn->prepare("
     SELECT thesis_status 
     FROM theses 
@@ -34,7 +33,6 @@ if (!$row || $row['thesis_status'] !== 'active') {
     exit;
 }
 
-/* Αλλαγή κατάστασης */
 $update = $conn->prepare("
     UPDATE theses 
     SET thesis_status = 'cancelled'
@@ -43,7 +41,6 @@ $update = $conn->prepare("
 $update->bind_param("i", $thesis_id);
 $update->execute();
 
-/* Καταγραφή λόγου */
 $insert = $conn->prepare("
     INSERT INTO thesis_cancellations (thesis_id, reason)
     VALUES (?, ?)
